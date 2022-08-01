@@ -26,50 +26,76 @@ vector<string> split(const string &s, char delim) {
     vector<string> result;
     int beg = 0;
     int end;
-    for(int i =0; i < s.size(); i++)
-    {
-        if(i == 0) 
-        {
-            for( int j = i; j<s.size(); j++)
-            {
-                if(s[j] == delim)
-                {
-                    end = j;
-                    result.push_back(s.substr(beg,end));
-                    break;
-                }
-            } 
-            continue;
-        }
-        if( s[i] == '"')
-        {
-            beg = i;
-            for( int j = i; j<s.size(); j++)
-            {
-                if(s[j] == '"')
-                {
-                    end = j;
-                    result.push_back(s.substr(beg,end));
-                    break;
-                }
+    int count = 0;
+    bool freeze = false;
+//    for(int i =0; i < s.size(); i++)
+//    {
+//        if(i == 0)
+//        {
+//            for( int j = i; j<s.size(); j++)
+//            {
+//                if(s[j] == delim)
+//                {
+//                    end = j;
+//                    result.push_back(s.substr(beg,end));
+//                    break;
+//                }
+//            }
+//            continue;
+//        }
+//        if( s[i] == '"')
+//        {
+//            beg = i;
+//            for( int j = i; j<s.size(); j++)
+//            {
+//                if(s[j] == '"')
+//                {
+//                    end = j;
+//                    result.push_back(s.substr(beg,end));
+//                    break;
+//                }
+//            }
+//            continue;
+//        }
+//        if(s[i] == delim)
+//        {
+//            for( int j = i; j<s.size(); j++)
+//            {
+//                if(s[j] == delim || j == s.size()-1)
+//                {
+//                    end = j;
+//                    result.push_back(s.substr(beg,end));
+//                    break;
+//                }
+//            }
+//            if(end == s.size()-1)
+//                break;
+//            else
+//            continue;
+//        }
+//    }
+    for (int i = 0; i < s.size(); i++) {
+        if (s[i] == ',') {
+            if (!freeze) {
+                result.push_back(s.substr(beg, count));
+                beg = i + 1;
+                count = 0;
             }
-            continue;
-        }
-        if(s[i] == delim)
-        {
-            for( int j = i; j<s.size(); j++)
-            {
-                if(s[j] == delim || j == s.size()-1)
-                {
-                    end = j;
-                    result.push_back(s.substr(beg,end));
-                    break;
-                }
+            else {
+                count++;
             }
-            if(end == s.size()-1)
-                break;
-            else
-            continue;
+        }
+        else if (s[i] == '"') {
+            if (!freeze) {
+                freeze = true;
+                beg = i + 1;
+            }
+            else {
+                freeze = false;
+            }
+        }
+        else {
+            count++;
         }
     }
     return result;
