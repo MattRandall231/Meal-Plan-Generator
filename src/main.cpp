@@ -4,7 +4,6 @@
 #include "Song.h"
 #include "Sorts.h"
 #include <chrono>
-#include <sstream>
 #include <fstream>
 using namespace std::chrono;
 using namespace  std;
@@ -22,58 +21,11 @@ void checkRank(string& input) {
     }
 }
 
-vector<string> split(const string &s, char delim) {
+vector<string> split(const string &s) {
     vector<string> result;
     int beg = 0;
-    int end;
     int count = 0;
     bool freeze = false;
-//    for(int i =0; i < s.size(); i++)
-//    {
-//        if(i == 0)
-//        {
-//            for( int j = i; j<s.size(); j++)
-//            {
-//                if(s[j] == delim)
-//                {
-//                    end = j;
-//                    result.push_back(s.substr(beg,end));
-//                    break;
-//                }
-//            }
-//            continue;
-//        }
-//        if( s[i] == '"')
-//        {
-//            beg = i;
-//            for( int j = i; j<s.size(); j++)
-//            {
-//                if(s[j] == '"')
-//                {
-//                    end = j;
-//                    result.push_back(s.substr(beg,end));
-//                    break;
-//                }
-//            }
-//            continue;
-//        }
-//        if(s[i] == delim)
-//        {
-//            for( int j = i; j<s.size(); j++)
-//            {
-//                if(s[j] == delim || j == s.size()-1)
-//                {
-//                    end = j;
-//                    result.push_back(s.substr(beg,end));
-//                    break;
-//                }
-//            }
-//            if(end == s.size()-1)
-//                break;
-//            else
-//            continue;
-//        }
-//    }
     for (int i = 0; i < s.size(); i++) {
         if (s[i] == ',') {
             if (!freeze) {
@@ -116,6 +68,8 @@ int main() {
     bool exp;
     vector<Song*> songs;
     // Used to store the ranking of each quality
+    unordered_map<string, float> rank;
+
     //todo start of csv parsing
     unsigned int sizeOfCsv = 0;
     vector<string> csvLines;
@@ -132,10 +86,10 @@ int main() {
         csvLines.push_back(line1);
     }
 
-    for(int i =0; i < csvLines.size(); i++)
+    for(auto & csvLine : csvLines)
     {
-        Song* songNode;
-        parsedValues = split( csvLines[i], ',');
+        Song* songNode = new Song;
+        parsedValues = split( csvLine);
         songNode->title = parsedValues[1];
         songNode->artist = parsedValues[4].substr(2,parsedValues[4].size()-4);
         if( parsedValues[8] == "TRUE")
@@ -152,8 +106,8 @@ int main() {
         songs.push_back(songNode);
     }
     //todo end of csv parsing
-    unordered_map<string, float> rank;
 
+    cout << endl;
     cout << "Hello! Welcome to the Playlist Generator." << endl;
 
     // While loop to create different playlists in one run
@@ -220,8 +174,8 @@ int main() {
         cout << endl;
         cout << "We will create your playlist using your year, danceability," << endl;
         cout << "energy, loudness, acoustic, and tempo preferences." << endl;
-        cout << "You will now rank these qualities from 1 - 6, with" << endl;
-        cout << "6 being least important to 1 being most important." << endl;
+        cout << "You will now rank these qualities from 1 - 5, with" << endl;
+        cout << "5 being least important to 1 being most important." << endl;
 
         // Asks user to rank each quality, checks input
         // Stores each ranking in a map to use for scoring
@@ -305,16 +259,17 @@ int main() {
                 song->score += rank["tempo"] * (1 - song->tempo / 249);
 
             // final percentage is caluclated for each song
-             song->percentage = song->score / totalPoints;
+            song->percentage = song->score / totalPoints;
         }
 
+        cout << endl;
+        cout << "Please wait while we sort all songs..." << endl;
         vector<Song *> copy = songs;
         // Time it takes to sort vector with Quicksort
         auto start = high_resolution_clock::now();
         Sorts::quickSort(songs);
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<nanoseconds>(stop - start);
-        cout << endl;
         cout << "Quicksort time: " << duration.count() << " nanoseconds" << endl;
         // Time it takes to sort vector with Timsort
         start = high_resolution_clock::now();
@@ -336,7 +291,6 @@ int main() {
         for (int j = 0; j < length; j++) {
             if (exp) {
                 playlist.push_back(songs[j]);
-                cout << j + 1 << ". " << songs[j]->title << " by " << songs[j]->artist << endl;
             } else {
                 for (int k = index; k < songs.size(); k++) {
                     if (!songs[k]->exp) {
@@ -377,6 +331,7 @@ int main() {
                     try {
                         songNum = abs(stoi(input));
                         valid = true;
+                        input = "data";
                     } catch (invalid_argument &) {
                         cout << "Please enter a valid number. ";
                     }
@@ -385,7 +340,7 @@ int main() {
                     cout << endl;
                     cout << "Title: " << playlist[songNum - 1]->title << endl;
                     cout << "Artist: " << playlist[songNum - 1]->artist << endl;
-                    cout << "Year: " << playlist[songNum - 1]->year;
+                    cout << "Year: " << playlist[songNum - 1]->year << endl;
                     cout << "Explicit: ";
                     if (playlist[songNum - 1]->exp)
                         cout << "Yes" << endl;
@@ -398,6 +353,7 @@ int main() {
                     cout << "Tempo: " << playlist[songNum - 1]->tempo << " BPM" << endl;
                     cout << "Duration: " << playlist[songNum - 1]->duration << " ms" << endl;
                     cout << "Final Score: " << playlist[songNum - 1]->percentage << endl;
+                    cout << endl;
                 }
 
             }
