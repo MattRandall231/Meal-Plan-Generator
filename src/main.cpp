@@ -137,7 +137,7 @@ int main() {
         Song* songNode;
         parsedValues = split( csvLines[i], ',');
         songNode->title = parsedValues[1];
-        songNode->artist = parsedValues[4].substr(2,parsedValues[4].size()-2);
+        songNode->artist = parsedValues[4].substr(2,parsedValues[4].size()-4);
         if( parsedValues[8] == "TRUE")
             songNode->exp = true; // whether a song is explicit or not
         else
