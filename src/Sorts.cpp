@@ -51,13 +51,13 @@ void Sorts::merge(std::vector<Song*>& songs, int start, int mid, int end) {
     //Create temporary arrays which will be merged
     int length1 = mid - start + 1;
     int length2 = end - mid;
-    Song* temp1[length1];
-    Song* temp2[length2];
+    vector<Song*> temp1;
+    vector<Song*> temp2;
     for (int i = 0; i < length1; i++) {
-        temp1[i] = songs[start + i];
+        temp1.push_back(songs[start + i]);
     }
     for (int i = 0; i < length2; i++) {
-        temp2[i] = songs[mid + i + 1];
+        temp2.push_back(songs[mid + i + 1]);
     }
     //Merge both temp arrays back into larger vector, moving pointers as appropriate
     int i = 0;
@@ -66,6 +66,7 @@ void Sorts::merge(std::vector<Song*>& songs, int start, int mid, int end) {
     while (i < length1 && j < length2) {
         if (temp1[i]->score >= temp2[j]->score) {
             songs[k] = temp1[i];
+            i++;
         }
         else {
             songs[k] = temp2[j];
