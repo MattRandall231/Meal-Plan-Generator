@@ -148,7 +148,7 @@ int main() {
         songNode->acousticness = stof(parsedValues[15]);
         songNode->year = stoi(parsedValues[22]);
         songNode->tempo = stof(parsedValues[19]);
-        songNode->duration = stof(parsedValues[20]);
+        songNode->duration = stoi(parsedValues[20]);
         songs.push_back(songNode);
     }
     //todo end of csv parsing
