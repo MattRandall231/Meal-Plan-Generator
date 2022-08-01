@@ -103,6 +103,7 @@ int main() {
         songNode->year = stoi(parsedValues[22]);
         songNode->tempo = stof(parsedValues[19]);
         songNode->duration = stoi(parsedValues[20]);
+        songNode->artist.replace(songNode->artist.begin(), songNode->artist.end(), "', '", "and");
         songs.push_back(songNode);
     }
     //todo end of csv parsing
