@@ -214,11 +214,12 @@ int main() {
 
         // Each song will get a certain amount of points based on its qualities and user preferences
         for (auto & song : songs) {
+            song->score = 0;
             if (year == 0) {
                 song->score += rank["year"];
             } else {
                 auto yearPoints = (float)abs(2022 - song->year);
-                yearPoints = yearPoints / (float)50;
+                yearPoints = yearPoints / (float)10;
                 if (yearPoints > 1)
                     yearPoints = 1;
                 yearPoints = 1 - yearPoints;
@@ -276,7 +277,7 @@ int main() {
         Sorts::timSort(copy);
         stop = high_resolution_clock::now();
         duration = duration_cast<nanoseconds>(stop - start);
-        cout << "Timsort time: " << duration.count() << " nanoseconds" << endl;
+        cout << "Timsort time:   " << duration.count() << " nanoseconds" << endl;
 
         // Asks about inclusion of explicit songs
         cout << endl;
@@ -368,3 +369,4 @@ int main() {
     }
     return 0;
 }
+
