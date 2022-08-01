@@ -220,8 +220,8 @@ int main() {
         cout << endl;
         cout << "We will create your playlist using your year, danceability," << endl;
         cout << "energy, loudness, acoustic, and tempo preferences." << endl;
-        cout << "You will now rank these qualities from 1 - 5, with" << endl;
-        cout << "5 being least important to 1 being most important." << endl;
+        cout << "You will now rank these qualities from 1 - 6, with" << endl;
+        cout << "6 being least important to 1 being most important." << endl;
 
         // Asks user to rank each quality, checks input
         // Stores each ranking in a map to use for scoring
