@@ -4,8 +4,10 @@
 #include "Song.h"
 #include "Sorts.h"
 #include <chrono>
+#include <sstream>
+#include <fstream>
 using namespace std::chrono;
-
+using namespace  std;
 void checkInput(string& input) {
     while (input != "0" && input != "1") {
         cout << R"(Invalid Entry. Enter "0" for no or "1" for yes. )";
@@ -18,6 +20,16 @@ void checkRank(string& input) {
         cout << "Please enter a valid ranking. ";
         cin >> input;
     }
+}
+
+vector<string> split( const string &s, char delim ) {
+    vector<string> result;
+    stringstream ss(s);
+    string item;
+    while (getline (ss, item, delim)) {
+        result.push_back (item);
+    }
+    return result;
 }
 
 int main() {
@@ -34,6 +46,42 @@ int main() {
     bool exp;
     vector<Song*> songs;
     // Used to store the ranking of each quality
+    //todo start of csv parsing
+    unsigned int sizeOfCsv = 0;
+    vector<string> csvLines;
+    vector<string> parsedValues;
+    ifstream file1("tracks_features.csv");
+    if (!file1.is_open())
+    {
+        cout << "CSV FILE NOT OPENED" << endl;
+    }
+    string line1;
+    std::getline(file1, line1);
+    for (; std::getline(file1, line1); ++sizeOfCsv)
+    {
+        csvLines.push_back(line1);
+    }
+
+    for(int i =0; i < csvLines.size(); i++)
+    {
+        Song* songNode;
+        parsedValues = split( csvLines[i], ',');
+        songNode->title = parsedValues[1];
+        string artist = parsedValues[4].substr(0,parsedValues[4].size()-1);
+        if( parsedValues[8] == "TRUE")
+            songNode->exp = true; // whether a song is explicit or not
+        else
+            songNode->exp = false;
+        songNode->danceability = stof(parsedValues[9]);
+        songNode->energy = stof(parsedValues[10]);
+        songNode->loudness = stof(parsedValues[12]) ;
+        songNode->acousticness = stof(parsedValues[15]);
+        songNode->year = stoi(parsedValues[22]);
+        songNode->tempo = stof(parsedValues[19]);
+        songNode->duration = stof(parsedValues[20]);
+        songs.push_back(songNode);
+    }
+    //todo end of csv parsing
     unordered_map<string, float> rank;
 
     cout << "Hello! Welcome to the Playlist Generator." << endl;
@@ -187,7 +235,7 @@ int main() {
                 song->score += rank["tempo"] * (1 - song->tempo / 249);
 
             // final percentage is caluclated for each song
-            song->percentage = song->score / totalPoints;
+             song->percentage = song->score / totalPoints;
         }
 
         vector<Song *> copy = songs;
