@@ -11,6 +11,9 @@ public:
     float energy;
     float loudness;
     float acousticness;
+    float tempo;
+    int duration;
     int year;
     float score = 0;
+    float percentage = 0;
 };
