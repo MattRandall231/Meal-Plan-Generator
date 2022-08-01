@@ -22,15 +22,59 @@ void checkRank(string& input) {
     }
 }
 
-vector<string> split( const string &s, char delim ) {
+vector<string> split(const string &s, char delim) {
     vector<string> result;
-    stringstream ss(s);
-    string item;
-    while (getline (ss, item, delim)) {
-        result.push_back (item);
+    int beg = 0;
+    int end;
+    for(int i =0; i < s.size(); i++)
+    {
+        if(i == 0) 
+        {
+            for( int j = i; j<s.size(); j++)
+            {
+                if(s[j] == delim)
+                {
+                    end = j;
+                    result.push_back(s.substr(beg,end));
+                    break;
+                }
+            } 
+            continue;
+        }
+        if( s[i] == '"')
+        {
+            beg = i;
+            for( int j = i; j<s.size(); j++)
+            {
+                if(s[j] == '"')
+                {
+                    end = j;
+                    result.push_back(s.substr(beg,end));
+                    break;
+                }
+            }
+            continue;
+        }
+        if(s[i] == delim)
+        {
+            for( int j = i; j<s.size(); j++)
+            {
+                if(s[j] == delim || j == s.size()-1)
+                {
+                    end = j;
+                    result.push_back(s.substr(beg,end));
+                    break;
+                }
+            }
+            if(end == s.size()-1)
+                break;
+            else
+            continue;
+        }
     }
     return result;
 }
+
 
 int main() {
     // Variables used to give scores and create playlist
