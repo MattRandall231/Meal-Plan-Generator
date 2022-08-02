@@ -7,6 +7,7 @@
 #include <fstream>
 using namespace std::chrono;
 using namespace  std;
+
 void checkInput(string& input) {
     while (input != "0" && input != "1") {
         cout << R"(Invalid Entry. Enter "0" for no or "1" for yes. )";
@@ -91,7 +92,7 @@ int main() {
         Song* songNode = new Song;
         parsedValues = split( csvLine);
         songNode->title = parsedValues[1];
-        songNode->artist = parsedValues[4].substr(2,parsedValues[4].size()-4);
+        songNode->artist = parsedValues[4].substr(2,parsedValues[4].size() - 4);
         if( parsedValues[8] == "TRUE")
             songNode->exp = true; // whether a song is explicit or not
         else
@@ -103,7 +104,8 @@ int main() {
         songNode->year = stoi(parsedValues[22]);
         songNode->tempo = stof(parsedValues[19]);
         songNode->duration = stoi(parsedValues[20]);
-        songNode->artist.replace(songNode->artist.begin(), songNode->artist.end(), "', '", "and");
+        if (songNode->artist.find("', '") != string::npos)
+            songNode->artist.replace(songNode->artist.find("', '"), 4, " and ");
         songs.push_back(songNode);
     }
     //todo end of csv parsing
@@ -175,8 +177,8 @@ int main() {
         cout << endl;
         cout << "We will create your playlist using your year, danceability," << endl;
         cout << "energy, loudness, acoustic, and tempo preferences." << endl;
-        cout << "You will now rank these qualities from 1 - 5, with" << endl;
-        cout << "5 being least important to 1 being most important." << endl;
+        cout << "You will now rank these qualities from 1 - 6, with" << endl;
+        cout << "6 being least important to 1 being most important." << endl;
 
         // Asks user to rank each quality, checks input
         // Stores each ranking in a map to use for scoring
@@ -297,6 +299,7 @@ int main() {
                 for (int k = index; k < songs.size(); k++) {
                     if (!songs[k]->exp) {
                         playlist.push_back(songs[k]);
+                        index++;
                         break;
                     }
                 }
