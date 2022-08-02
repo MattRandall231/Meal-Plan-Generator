@@ -104,7 +104,7 @@ int main() {
         songNode->year = stoi(parsedValues[22]);
         songNode->tempo = stof(parsedValues[19]);
         songNode->duration = stoi(parsedValues[20]);
-        if (songNode->artist.find("', '") != string::npos)
+        while (songNode->artist.find("', '") != string::npos)
             songNode->artist.replace(songNode->artist.find("', '"), 4, " and ");
         songs.push_back(songNode);
     }
@@ -373,4 +373,5 @@ int main() {
     }
     return 0;
 }
+
 
